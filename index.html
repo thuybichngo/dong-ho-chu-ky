@@ -101,10 +101,17 @@
 
   .mc-aux{display:flex;gap:10px;flex-wrap:wrap}
   .mc-chip{background:var(--panel-2);border:1px solid var(--line);border-radius:6px;
-    padding:9px 12px;min-width:118px}
+    padding:11px 13px;width:calc(50% - 5px);max-width:300px}
+  @media(max-width:560px){.mc-chip{width:100%;max-width:none}}
   .mc-chip-n{font-family:var(--mono);font-size:10px;letter-spacing:.08em;
     text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px}
-  .mc-chip-v{font-family:var(--mono);font-size:14px;color:var(--ink-dim)}
+  .mc-chip-v{font-family:var(--mono);font-size:14px;color:var(--ink);margin-bottom:5px}
+  .mc-chip-d{font-size:12px;line-height:1.5;color:var(--ink-faint)}
+
+  .mc-aux-sum{background:rgba(200,162,74,.06);border-left:2px solid var(--brass);
+    border-radius:0 6px 6px 0;padding:13px 16px;margin-top:16px;
+    font-size:13.5px;line-height:1.6;color:var(--ink-dim)}
+  .mc-aux-sum b{color:var(--ink);font-weight:600}
 
   .mc-stale{background:rgba(176,74,60,.12);border:1px solid rgba(176,74,60,.4);
     color:#E08574;font-family:var(--mono);font-size:11.5px;line-height:1.5;
@@ -181,8 +188,12 @@
         <circle id="pin" cx="170" cy="170" r="6" fill="var(--brass)"/>
         <circle id="dot" cx="170" cy="170" r="5.5" fill="var(--panel)" stroke="var(--brass)"
                 stroke-width="2.5" opacity="0" style="transition:opacity .4s"/>
-        <text id="nextLbl" font-family="monospace" font-size="9.5" letter-spacing="1"
-              fill="#5E7085" text-anchor="middle" opacity="0" style="transition:opacity .5s"></text>
+        <g id="trendArrow" opacity="0" style="transition:opacity .6s">
+          <line id="trendLine" stroke-width="2.2" stroke-linecap="round"/>
+          <polygon id="trendHead"/>
+          <text id="nextLbl" font-family="monospace" font-size="9.5" letter-spacing="1"
+                text-anchor="middle"></text>
+        </g>
       </svg>
 
       <div>
@@ -221,6 +232,7 @@
       <p class="mc-lead">Những chỉ báo này <b>không được tính điểm</b> — chúng không tham gia chẩn đoán giai đoạn,
         chỉ là màu bổ sung để đọc bối cảnh.</p>
       <div class="mc-aux" id="aux"></div>
+      <div class="mc-aux-sum mc-hide" id="auxSum"></div>
     </div>
 
     <div class="mc-stale mc-hide" id="stale"></div>
@@ -399,8 +411,18 @@
     $("auxWrap").classList.toggle("mc-hide", aux.length === 0);
     $("aux").innerHTML = aux.map(function(a){
       return '<div class="mc-chip"><div class="mc-chip-n">' + esc(a["tên"]) + '</div>' +
-             '<div class="mc-chip-v">' + esc(a["giá_trị"] || "—") + '</div></div>';
+             '<div class="mc-chip-v">' + esc(a["giá_trị"] || "—") + '</div>' +
+             (a["diễn_giải"] ? '<div class="mc-chip-d">' + esc(a["diễn_giải"]) + '</div>' : '') +
+             '</div>';
     }).join("");
+
+    var sum = cur["phụ_trợ_tổng_hợp"];
+    if(sum){
+      $("auxSum").innerHTML = esc(sum).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+      $("auxSum").classList.remove("mc-hide");
+    } else {
+      $("auxSum").classList.add("mc-hide");
+    }
 
     // dial + vệt lịch sử
     var pos = centroid(score);
@@ -423,16 +445,47 @@
       $("hand").style.transform = "rotate(" + deg + "deg) scaleX(" + len + ")";
     });
     setTimeout(function(){
-      $("dot").setAttribute("cx", PX(pos[0]));
-      $("dot").setAttribute("cy", PY(pos[1]));
+      var x0 = PX(pos[0]), y0 = PY(pos[1]);
+      $("dot").setAttribute("cx", x0);
+      $("dot").setAttribute("cy", y0);
       $("dot").setAttribute("stroke", ph.color);
       $("dot").style.opacity = 1;
+
       var nx = PHASES[cur["hướng_chuyển"]];
+      var arrow = $("trendArrow");
       if(nx && cur["hướng_chuyển"] !== "—" && cur["hướng_chuyển"] !== phase){
-        $("nextLbl").setAttribute("x", PX(nx.c[0]*0.60));
-        $("nextLbl").setAttribute("y", PY(nx.c[1]*0.60));
-        $("nextLbl").textContent = "→ " + cur["hướng_chuyển"];
-        $("nextLbl").style.opacity = 1;
+        // vector từ vị trí hiện tại → tâm góc phần tư của giai đoạn kế
+        var tx = PX(nx.c[0]), ty = PY(nx.c[1]);
+        var vx = tx - x0, vy = ty - y0;
+        var mag = Math.sqrt(vx*vx + vy*vy) || 1;
+        var ux = vx/mag, uy = vy/mag;
+        var gap = 11, len = 33, hl = 8, hw = 5;
+        var ax = x0 + ux*gap,         ay = y0 + uy*gap;          // gốc mũi tên (cách chấm 1 chút)
+        var tipx = x0 + ux*(gap+len), tipy = y0 + uy*(gap+len);  // đầu nhọn
+        var basex = tipx - ux*hl,     basey = tipy - uy*hl;      // đáy đầu nhọn
+        var perpx = -uy, perpy = ux;
+
+        $("trendLine").setAttribute("x1", ax.toFixed(1));
+        $("trendLine").setAttribute("y1", ay.toFixed(1));
+        $("trendLine").setAttribute("x2", basex.toFixed(1));
+        $("trendLine").setAttribute("y2", basey.toFixed(1));
+        $("trendLine").setAttribute("stroke", nx.color);
+
+        $("trendHead").setAttribute("points",
+          tipx.toFixed(1) + "," + tipy.toFixed(1) + " " +
+          (basex + perpx*hw).toFixed(1) + "," + (basey + perpy*hw).toFixed(1) + " " +
+          (basex - perpx*hw).toFixed(1) + "," + (basey - perpy*hw).toFixed(1));
+        $("trendHead").setAttribute("fill", nx.color);
+
+        var lx = Math.max(74, Math.min(266, tipx + ux*16));
+        var ly = tipy + uy*16 + 3;
+        $("nextLbl").setAttribute("x", lx.toFixed(1));
+        $("nextLbl").setAttribute("y", ly.toFixed(1));
+        $("nextLbl").setAttribute("fill", nx.color);
+        $("nextLbl").textContent = (cur["vị_trí"] === "cuối" ? "chớm " : "hướng ") + cur["hướng_chuyển"];
+        arrow.style.opacity = 1;
+      } else {
+        arrow.style.opacity = 0;
       }
     }, 900);
 
