@@ -52,12 +52,19 @@
       ],
 
       "phụ_trợ": [
-        { "tên": "LS liên NH qua đêm", "giá_trị": "~10,1% (căng mạnh)" },
-        { "tên": "Tăng trưởng tín dụng", "giá_trị": "+7,41% đến 26/6 (mục tiêu 15%)" },
-        { "tên": "Tỷ giá trung tâm", "giá_trị": "25.202 (+81đ từ đầu năm)" },
-        { "tên": "P/E fwd VN-Index", "giá_trị": "~10–11,7x" },
-        { "tên": "View CTCK", "giá_trị": "Constructive (SSI base 1.920)" }
+        { "tên": "LS liên NH qua đêm", "giá_trị": "~10,1% (căng mạnh)",
+          "diễn_giải": "Giá vay tiền qua đêm giữa các ngân hàng — thước đo thanh khoản hệ thống. Bình thường 2–5%; vọt lên 10% nghĩa là tiền trong hệ thống đang khan, do tín dụng chạy nhanh hơn huy động." },
+        { "tên": "Tăng trưởng tín dụng", "giá_trị": "+7,41% đến 26/6 (mục tiêu 15%)",
+          "diễn_giải": "Lượng tiền ngân hàng bơm ra nền kinh tế. Nửa năm đã đi được nửa chỉ tiêu — nhịp cho vay nhanh, dòng tiền đang được đẩy mạnh ra thị trường." },
+        { "tên": "Tỷ giá trung tâm", "giá_trị": "25.202 (+81đ từ đầu năm)",
+          "diễn_giải": "Giá quy đổi USD/VND do SBV công bố. Mới nhích +81đ cả nửa năm — tiền đồng ổn định, chưa có áp lực mất giá đáng lo." },
+        { "tên": "P/E fwd VN-Index", "giá_trị": "~10–11,7x",
+          "diễn_giải": "Định giá thị trường chứng khoán — nhà đầu tư trả bao nhiêu đồng cho mỗi đồng lợi nhuận kỳ vọng. Quanh 10–12x là vùng rẻ so với lịch sử, còn dư địa tăng." },
+        { "tên": "View CTCK", "giá_trị": "Constructive (SSI base 1.920)",
+          "diễn_giải": "Quan điểm các công ty chứng khoán lớn. Đang lạc quan thận trọng, có kỳ vọng FTSE nâng hạng tháng 9 — nhất quán với giai đoạn mở rộng." }
       ],
+
+      "phụ_trợ_tổng_hợp": "Các chỉ báo phụ trợ kể một câu chuyện nhất quán với chẩn đoán **Phục hồi cuối, chớm Tăng nóng**. Tín dụng chạy nhanh và thanh khoản liên ngân hàng căng cho thấy dòng tiền đang được bơm mạnh — động cơ điển hình đẩy nền kinh tế sang giai đoạn nóng. Cùng lúc, tỷ giá ổn định và định giá chứng khoán còn rẻ nghĩa là rủi ro chưa bị định giá vào thị trường và tâm lý vẫn tích cực. Điểm cần canh chừng là LS liên ngân hàng ~10,1%: nếu thanh khoản căng kéo dài, nó thường là tín hiệu **đến sớm nhất** báo lạm phát và lãi suất sắp đảo chiều. Đây là những chỉ báo bổ trợ — chúng không đổi được kết luận giai đoạn, nhưng cho biết áp lực đang tích tụ theo hướng nào.",
 
       "nguồn": "SBV, TCTK, baochinhphu, Vietstock, SSI/Dragon Capital — truy cập 15/07/2026",
       "is_sample": false
