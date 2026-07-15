@@ -1,50 +1,50 @@
 {
   "contract_version": "v1",
-  "_huong_dan": "Mỗi tháng: COPY object cuối cùng trong 'months', PASTE thành object mới ở CUỐI mảng, rồi sửa số. KHÔNG sửa các object cũ — chúng là lịch sử vẽ trên mặt đồng hồ.",
+  "_huong_dan": "Mỗi tháng: COPY object cuối cùng trong 'months', PASTE thành object mới ở CUỐI mảng, rồi sửa số. KHÔNG sửa các object cũ — chúng là lịch sử vẽ trên mặt đồng hồ. Nhớ đổi is_sample thành false.",
   "months": [
     {
       "as_of": "07/2026",
-      "giai_đoạn": "Tăng nóng",
+      "giai_đoạn": "Phục hồi",
       "vị_trí": "cuối",
-      "hướng_chuyển": "Đình lạm",
+      "hướng_chuyển": "Tăng nóng",
       "độ_tin_cậy": "ƯU THẾ 3/4",
       "posture": "pha 70-30",
 
-      "cờ_chính_sách_đi_ngược": "CÓ",
+      "cờ_chính_sách_đi_ngược": "KHÔNG",
       "cờ_sốc_ngoại_sinh": "KHÔNG",
       "cờ_view_chiến_lược_mâu_thuẫn": "KHÔNG",
 
-      "tóm_tắt": "DỮ LIỆU MẪU — chưa phải số thật. Thay bằng kết quả chạy skill vietnam-macro-analysis.",
+      "tóm_tắt": "Phục hồi cuối, chớm Tăng nóng: GDP 6T +8,18% và chính sách nới lỏng mạnh đẩy tín dụng; lạm phát bình quân còn dưới mục tiêu nhưng CPI tháng 6 đã chạm 4,69%. ⚠ LS liên NH qua đêm vọt ~10,1% cho thấy thanh khoản đã căng dù chính sách vẫn nới — tín hiệu Tăng nóng đang hình thành.",
 
       "signals": [
         {
           "key": "gdp",
           "signal": "GDP",
-          "giá_trị": "—",
-          "reference": "vs mục tiêu năm (Quốc hội)",
-          "kết_luận": "DƯỚI",
+          "giá_trị": "8,18% (6T); Q2 8,39%",
+          "reference": "Mục tiêu năm ≥10% (Quốc hội)",
+          "kết_luận": "DƯỚI (đang tăng tốc)",
           "khớp": ["Giảm phát", "Phục hồi"]
         },
         {
           "key": "cpi",
           "signal": "CPI",
-          "giá_trị": "—",
-          "reference": "bình quân YoY vs mục tiêu năm",
-          "kết_luận": "VƯỢT",
-          "khớp": ["Tăng nóng", "Đình lạm"]
+          "giá_trị": "4,38% bq 6T (T6: 4,69% YoY)",
+          "reference": "Mục tiêu năm ~4,5%",
+          "kết_luận": "Sát trần — monthly đã vượt",
+          "khớp": ["Giảm phát"]
         },
         {
           "key": "ls",
           "signal": "Lãi suất điều hành",
-          "giá_trị": "—",
+          "giá_trị": "Giữ 4,5%, tín hiệu giảm thêm",
           "reference": "xu hướng 6 tháng, không dùng mức",
-          "kết_luận": "Giảm",
+          "kết_luận": "Đi ngang/nghiêng giảm",
           "khớp": ["Phục hồi", "Tăng nóng"]
         },
         {
           "key": "cs",
           "signal": "Chính sách thực tế",
-          "giá_trị": "—",
+          "giá_trị": "Nới lỏng: ép giảm LS, tín dụng mục tiêu ~15%, thúc đầu tư công",
           "reference": "hành động ĐANG triển khai 30–60 ngày",
           "kết_luận": "Nới lỏng",
           "khớp": ["Phục hồi", "Tăng nóng"]
@@ -52,16 +52,15 @@
       ],
 
       "phụ_trợ": [
-        { "tên": "LS liên NH qua đêm", "giá_trị": "—" },
-        { "tên": "Tăng trưởng tín dụng", "giá_trị": "—" },
-        { "tên": "Tỷ giá USD/VND", "giá_trị": "—" },
-        { "tên": "Cung tiền M2", "giá_trị": "—" },
-        { "tên": "Vàng %YoY", "giá_trị": "—" },
-        { "tên": "P/E VN-Index", "giá_trị": "—" }
+        { "tên": "LS liên NH qua đêm", "giá_trị": "~10,1% (căng mạnh)" },
+        { "tên": "Tăng trưởng tín dụng", "giá_trị": "+7,41% đến 26/6 (mục tiêu 15%)" },
+        { "tên": "Tỷ giá trung tâm", "giá_trị": "25.202 (+81đ từ đầu năm)" },
+        { "tên": "P/E fwd VN-Index", "giá_trị": "~10–11,7x" },
+        { "tên": "View CTCK", "giá_trị": "Constructive (SSI base 1.920)" }
       ],
 
-      "nguồn": "thay bằng nguồn thật + ngày truy cập",
-      "is_sample": true
+      "nguồn": "SBV, TCTK, baochinhphu, Vietstock, SSI/Dragon Capital — truy cập 15/07/2026",
+      "is_sample": false
     }
   ]
 }
