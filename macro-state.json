@@ -1,0 +1,67 @@
+{
+  "contract_version": "v1",
+  "_huong_dan": "Mỗi tháng: COPY object cuối cùng trong 'months', PASTE thành object mới ở CUỐI mảng, rồi sửa số. KHÔNG sửa các object cũ — chúng là lịch sử vẽ trên mặt đồng hồ.",
+  "months": [
+    {
+      "as_of": "07/2026",
+      "giai_đoạn": "Tăng nóng",
+      "vị_trí": "cuối",
+      "hướng_chuyển": "Đình lạm",
+      "độ_tin_cậy": "ƯU THẾ 3/4",
+      "posture": "pha 70-30",
+
+      "cờ_chính_sách_đi_ngược": "CÓ",
+      "cờ_sốc_ngoại_sinh": "KHÔNG",
+      "cờ_view_chiến_lược_mâu_thuẫn": "KHÔNG",
+
+      "tóm_tắt": "DỮ LIỆU MẪU — chưa phải số thật. Thay bằng kết quả chạy skill vietnam-macro-analysis.",
+
+      "signals": [
+        {
+          "key": "gdp",
+          "signal": "GDP",
+          "giá_trị": "—",
+          "reference": "vs mục tiêu năm (Quốc hội)",
+          "kết_luận": "DƯỚI",
+          "khớp": ["Giảm phát", "Phục hồi"]
+        },
+        {
+          "key": "cpi",
+          "signal": "CPI",
+          "giá_trị": "—",
+          "reference": "bình quân YoY vs mục tiêu năm",
+          "kết_luận": "VƯỢT",
+          "khớp": ["Tăng nóng", "Đình lạm"]
+        },
+        {
+          "key": "ls",
+          "signal": "Lãi suất điều hành",
+          "giá_trị": "—",
+          "reference": "xu hướng 6 tháng, không dùng mức",
+          "kết_luận": "Giảm",
+          "khớp": ["Phục hồi", "Tăng nóng"]
+        },
+        {
+          "key": "cs",
+          "signal": "Chính sách thực tế",
+          "giá_trị": "—",
+          "reference": "hành động ĐANG triển khai 30–60 ngày",
+          "kết_luận": "Nới lỏng",
+          "khớp": ["Phục hồi", "Tăng nóng"]
+        }
+      ],
+
+      "phụ_trợ": [
+        { "tên": "LS liên NH qua đêm", "giá_trị": "—" },
+        { "tên": "Tăng trưởng tín dụng", "giá_trị": "—" },
+        { "tên": "Tỷ giá USD/VND", "giá_trị": "—" },
+        { "tên": "Cung tiền M2", "giá_trị": "—" },
+        { "tên": "Vàng %YoY", "giá_trị": "—" },
+        { "tên": "P/E VN-Index", "giá_trị": "—" }
+      ],
+
+      "nguồn": "thay bằng nguồn thật + ngày truy cập",
+      "is_sample": true
+    }
+  ]
+}

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đồng hồ chu kỳ kinh tế Việt Nam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Be+Vietnam+Pro:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --panel:#141A22; --panel-2:#1B242F; --line:#2C3846;
+    --ink:#E7EDF3; --ink-dim:#8FA0B1; --ink-faint:#5E7085;
+    --brass:#C8A24A;
+    --reflation:#4A7FB5; --recovery:#4E9B72;
+    --overheat:#D19A3C; --stagflation:#B04A3C; --unknown:#7A8797;
+    --display:"Bricolage Grotesque","Be Vietnam Pro",system-ui,sans-serif;
+    --body:"Be Vietnam Pro",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--panel)}
+  body{font-family:var(--body);color:var(--ink);line-height:1.55;
+    padding:20px;-webkit-font-smoothing:antialiased}
+  .mc-root{max-width:1000px;margin:0 auto;padding:8px 4px 24px}
+
+  .mc-eyebrow{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);
+    border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:22px}
+  .mc-eyebrow b{color:var(--brass);font-weight:600}
+
+  .mc-sample{background:rgba(200,162,74,.10);border:1px solid rgba(200,162,74,.35);
+    color:var(--brass);font-family:var(--mono);font-size:11px;
+    padding:8px 12px;border-radius:6px;margin-bottom:20px}
+
+  .mc-main{display:grid;grid-template-columns:330px 1fr;gap:34px;align-items:center}
+  @media(max-width:760px){.mc-main{grid-template-columns:1fr;gap:24px}}
+  .mc-dial{width:100%;height:auto;display:block}
+  .mc-hand{transform-origin:170px 170px;transition:transform 1.1s cubic-bezier(.16,.9,.3,1)}
+  @media(prefers-reduced-motion:reduce){.mc-hand{transition:none}}
+  .mc-qlabel{font-family:var(--display);font-size:12px;font-weight:700;
+    letter-spacing:.09em;text-transform:uppercase}
+
+  .mc-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+  .mc-phase{font-family:var(--display);font-size:clamp(36px,5.4vw,50px);font-weight:800;
+    line-height:1.02;letter-spacing:-.02em}
+  .mc-sub{font-family:var(--mono);font-size:12px;color:var(--ink-dim);margin:8px 0 14px}
+  .mc-sub span{color:var(--ink-faint)}
+  .mc-summary{color:var(--ink-dim);font-size:15px;max-width:48ch}
+  .mc-flags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .mc-flag{font-family:var(--mono);font-size:11px;padding:5px 9px;border-radius:5px;
+    background:rgba(176,74,60,.13);border:1px solid rgba(176,74,60,.4);color:#E08574}
+
+  .mc-h{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-faint);border-top:1px solid var(--line);
+    padding-top:16px;margin-bottom:6px;display:flex;justify-content:space-between;
+    gap:12px;align-items:center;flex-wrap:wrap}
+  .mc-lead{font-size:13.5px;color:var(--ink-dim);max-width:74ch;margin-bottom:16px}
+  .mc-lead b{color:var(--ink);font-weight:600}
+
+  .mc-scroll{overflow-x:auto;margin-bottom:8px}
+  table.mc-m{width:100%;border-collapse:collapse;min-width:620px}
+  .mc-m th,.mc-m td{padding:11px 8px;text-align:center;border-bottom:1px solid var(--line)}
+  .mc-m th:first-child,.mc-m td:first-child{text-align:left;padding-left:0;width:34%}
+  .mc-m thead th{font-family:var(--display);font-size:11px;font-weight:700;
+    letter-spacing:.07em;text-transform:uppercase;vertical-align:bottom;cursor:help}
+  .mc-m thead th:first-child{font-family:var(--mono);font-weight:400;
+    color:var(--ink-faint);letter-spacing:.1em;cursor:default}
+  .sig-n{font-size:13.5px;font-weight:600}
+  .sig-r{font-size:11.5px;color:var(--ink-faint);margin-top:2px;font-weight:400}
+  .sig-v{font-family:var(--mono);font-size:13px;color:var(--ink-dim);margin-top:3px}
+  .sig-v b{color:var(--ink);font-weight:500}
+  .tick{font-size:15px;line-height:1;cursor:help}
+  .no{color:var(--line);font-size:12px}
+  .mc-m tfoot td{border-bottom:0;border-top:2px solid var(--line);
+    font-family:var(--mono);font-size:17px;font-weight:600;padding-top:13px}
+  .mc-m tfoot td:first-child{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:400}
+  .win{position:relative}
+  .win::after{content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2px;
+    background:currentColor;opacity:.55}
+
+  .mc-legend{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
+    display:flex;gap:18px;flex-wrap:wrap;margin:12px 0 4px}
+  .mc-profiles{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+    padding:14px 16px;margin-top:12px;font-size:13px;color:var(--ink-dim)}
+  .mc-profiles div{padding:7px 0;border-bottom:1px solid var(--line)}
+  .mc-profiles div:last-child{border-bottom:0}
+  .mc-profiles b{font-family:var(--display);font-weight:700;font-size:12.5px;
+    letter-spacing:.04em;text-transform:uppercase}
+  .mc-profiles span{font-family:var(--mono);font-size:12px;color:var(--ink-faint)}
+
+  .mc-mean{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;
+    font-size:13.5px;color:var(--ink-faint);margin-top:14px;align-items:baseline}
+  .mc-mean code{font-family:var(--mono);font-size:12px;color:var(--brass);white-space:nowrap}
+  .mc-mean .now{color:var(--ink-dim);font-weight:600}
+  .mc-mean .now code{color:var(--ink)}
+
+  .mc-aux{display:flex;gap:10px;flex-wrap:wrap}
+  .mc-chip{background:var(--panel-2);border:1px solid var(--line);border-radius:6px;
+    padding:9px 12px;min-width:118px}
+  .mc-chip-n{font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px}
+  .mc-chip-v{font-family:var(--mono);font-size:14px;color:var(--ink-dim)}
+
+  .mc-stale{background:rgba(176,74,60,.12);border:1px solid rgba(176,74,60,.4);
+    color:#E08574;font-family:var(--mono);font-size:11.5px;line-height:1.5;
+    padding:9px 12px;border-radius:6px;margin-top:24px}
+
+  .mc-disc{margin-top:24px;padding-top:16px;border-top:1px solid var(--line)}
+  .mc-disc-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px}
+  .mc-disc ul{list-style:none;display:grid;gap:7px;max-width:80ch}
+  .mc-disc li{display:grid;grid-template-columns:auto 1fr;gap:9px;
+    font-size:12.5px;line-height:1.55;color:var(--ink-faint)}
+  .mc-disc li::before{content:"";width:3px;height:3px;border-radius:50%;
+    background:var(--line);margin-top:9px}
+  .mc-disc b{color:var(--ink-dim);font-weight:600}
+
+  .mc-foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11px;color:var(--ink-faint);line-height:1.6}
+
+  .mc-btn{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    background:transparent;color:var(--ink-faint);border:1px solid var(--line);
+    border-radius:5px;padding:4px 9px;cursor:pointer;transition:.15s}
+  .mc-btn:hover{color:var(--brass);border-color:var(--brass)}
+  .mc-btn:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  .mc-hide{display:none}
+  .mc-skel{color:var(--ink-faint);font-family:var(--mono);font-size:12px;padding:50px 0}
+  .mc-err{background:rgba(176,74,60,.12);border:1px solid rgba(176,74,60,.4);
+    color:#E08574;font-family:var(--mono);font-size:12.5px;line-height:1.6;
+    padding:14px 16px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="mc-root">
+  <div class="mc-skel" id="skel">Đang tải Macro State…</div>
+  <div class="mc-err mc-hide" id="err"></div>
+
+  <div id="app" class="mc-hide">
+    <div class="mc-eyebrow">
+      <span>Đồng hồ chu kỳ kinh tế Việt Nam</span>
+      <span>Kỳ <b id="asOf">—</b> · hợp đồng v1</span>
+    </div>
+
+    <div id="sampleBanner" class="mc-sample mc-hide">Dữ liệu mẫu — chưa phải số liệu thật.</div>
+
+    <div class="mc-main">
+      <svg class="mc-dial" viewBox="0 0 340 340" role="img" aria-labelledby="dt">
+        <title id="dt">Vị trí nền kinh tế theo trục tăng trưởng và lạm phát</title>
+        <g opacity="0.13">
+          <rect x="170" y="20"  width="150" height="150" fill="var(--overheat)"/>
+          <rect x="170" y="170" width="150" height="150" fill="var(--recovery)"/>
+          <rect x="20"  y="170" width="150" height="150" fill="var(--reflation)"/>
+          <rect x="20"  y="20"  width="150" height="150" fill="var(--stagflation)"/>
+        </g>
+        <circle cx="170" cy="170" r="150" fill="none" stroke="var(--line)"/>
+        <circle cx="170" cy="170" r="100" fill="none" stroke="var(--line)" stroke-dasharray="2 5"/>
+        <circle cx="170" cy="170" r="50"  fill="none" stroke="var(--line)" stroke-dasharray="2 5"/>
+        <line x1="20" y1="170" x2="320" y2="170" stroke="var(--line)"/>
+        <line x1="170" y1="20" x2="170" y2="320" stroke="var(--line)"/>
+        <text x="170" y="12" text-anchor="middle" fill="#5E7085" font-family="monospace" font-size="9" letter-spacing="1.4">LẠM PHÁT VƯỢT</text>
+        <text x="170" y="334" text-anchor="middle" fill="#5E7085" font-family="monospace" font-size="9" letter-spacing="1.4">LẠM PHÁT DƯỚI</text>
+        <text x="14" y="170" fill="#5E7085" font-family="monospace" font-size="9" letter-spacing="1.4" transform="rotate(-90 14 170)" text-anchor="middle">TĂNG TRƯỞNG DƯỚI</text>
+        <text x="332" y="170" fill="#5E7085" font-family="monospace" font-size="9" letter-spacing="1.4" transform="rotate(90 332 170)" text-anchor="middle">TĂNG TRƯỞNG VƯỢT</text>
+        <text class="mc-qlabel" x="248" y="50"  text-anchor="middle" fill="var(--overheat)">TĂNG NÓNG</text>
+        <text class="mc-qlabel" x="248" y="300" text-anchor="middle" fill="var(--recovery)">PHỤC HỒI</text>
+        <text class="mc-qlabel" x="92"  y="300" text-anchor="middle" fill="var(--reflation)">GIẢM PHÁT</text>
+        <text class="mc-qlabel" x="92"  y="50"  text-anchor="middle" fill="var(--stagflation)">ĐÌNH LẠM</text>
+
+        <polyline id="trail" fill="none" stroke="#5E7085" stroke-width="1.5"
+                  stroke-dasharray="3 4" opacity="0.5" points=""/>
+        <g id="trailDots"></g>
+        <g id="hand" class="mc-hand" style="transform:rotate(0deg) scaleX(0)">
+          <line x1="170" y1="170" x2="320" y2="170" stroke="var(--brass)" stroke-width="2"/>
+        </g>
+        <circle id="pin" cx="170" cy="170" r="6" fill="var(--brass)"/>
+        <circle id="dot" cx="170" cy="170" r="5.5" fill="var(--panel)" stroke="var(--brass)"
+                stroke-width="2.5" opacity="0" style="transition:opacity .4s"/>
+        <text id="nextLbl" font-family="monospace" font-size="9.5" letter-spacing="1"
+              fill="#5E7085" text-anchor="middle" opacity="0" style="transition:opacity .5s"></text>
+      </svg>
+
+      <div>
+        <div class="mc-kicker">Chẩn đoán</div>
+        <div class="mc-phase" id="phaseName">—</div>
+        <div class="mc-sub" id="sub"></div>
+        <p class="mc-summary" id="summary"></p>
+        <div class="mc-flags" id="flags"></div>
+      </div>
+    </div>
+
+    <div class="mc-h">
+      <span>Điểm này ở đâu ra</span>
+      <button class="mc-btn" id="toggleProfiles">Hồ sơ chính tắc</button>
+    </div>
+    <p class="mc-lead">
+      Nền kinh tế thật hiếm khi khớp trọn vẹn một giai đoạn nào trong sách. Nên thay vì gán đại một cái nhãn,
+      ta đối chiếu <b>từng signal</b> với hồ sơ chính tắc của <b>cả bốn giai đoạn</b>.
+      Mỗi ô ✓ là một signal khớp — cộng dọc xuống chính là điểm.
+      Giai đoạn nào được <b>≥3/4</b> thì được xác nhận.
+    </p>
+
+    <div class="mc-scroll"><table class="mc-m" id="matrix"></table></div>
+
+    <div class="mc-legend">
+      <span>✓ = signal khớp hồ sơ giai đoạn đó</span>
+      <span>· = không khớp</span>
+      <span>Tối đa 4 điểm mỗi giai đoạn</span>
+    </div>
+
+    <div class="mc-profiles mc-hide" id="profiles"></div>
+    <div class="mc-mean" id="meaning"></div>
+
+    <div id="auxWrap">
+      <div class="mc-h"><span>Chỉ báo phụ trợ</span></div>
+      <p class="mc-lead">Những chỉ báo này <b>không được tính điểm</b> — chúng không tham gia chẩn đoán giai đoạn,
+        chỉ là màu bổ sung để đọc bối cảnh.</p>
+      <div class="mc-aux" id="aux"></div>
+    </div>
+
+    <div class="mc-stale mc-hide" id="stale"></div>
+
+    <div class="mc-disc">
+      <div class="mc-disc-h">Đọc kỹ trước khi dùng</div>
+      <ul>
+        <li><span><b>Đây không phải khuyến nghị đầu tư.</b> Công cụ này chỉ chẩn đoán <i>bối cảnh</i> vĩ mô.
+          Nó không nói bạn nên mua gì, bán gì, hay vào lệnh lúc nào. Quyết định và rủi ro là của bạn.</span></li>
+        <li><span><b>Khung 4 giai đoạn là heuristic, không phải mô hình dự báo.</b> Nó mô tả nền kinh tế
+          <i>đang ở đâu</i>, không dự đoán nó <i>sẽ đi đâu</i>. Ô "hướng chuyển" chỉ là suy luận từ signal lệch —
+          chu kỳ thật có thể quay đầu, đứng yên, hoặc nhảy cóc.</span></li>
+        <li><span><b>Số liệu vĩ mô có độ trễ và hay bị điều chỉnh lại</b> sau khi công bố lần đầu.
+          Một chẩn đoán đúng ở thời điểm cập nhật vẫn có thể sai khi số liệu được sửa.</span></li>
+        <li><span><b>Điểm số không phải xác suất.</b> "3/4" nghĩa là ba trong bốn signal khớp hồ sơ giai đoạn đó —
+          không có nghĩa là 75% khả năng đúng.</span></li>
+        <li><span><b>Cập nhật thủ công theo tháng.</b> Xem kỳ ở đầu trang; nếu đã lâu, số liệu trên đây
+          không còn phản ánh hiện tại.</span></li>
+        <li><span>Khung này riêng cho Việt Nam (SBV, mục tiêu Quốc hội, view CTCK trong nước) —
+          không áp cho thị trường khác.</span></li>
+      </ul>
+    </div>
+
+    <div class="mc-foot" id="stamp">—</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var DATA_URL = "./macro-state.json";
+
+  var PHASES = {
+    "Giảm phát":      {c:[-0.55,-0.55], color:"var(--reflation)"},
+    "Phục hồi":       {c:[ 0.55,-0.55], color:"var(--recovery)"},
+    "Tăng nóng":      {c:[ 0.55, 0.55], color:"var(--overheat)"},
+    "Đình lạm":       {c:[-0.55, 0.55], color:"var(--stagflation)"},
+    "Không xác định": {c:[ 0,    0   ], color:"var(--unknown)"}
+  };
+  var ORDER = ["Giảm phát","Phục hồi","Tăng nóng","Đình lạm"];
+
+  var PROFILE = {
+    "Giảm phát": {gdp:"DƯỚI mục tiêu", cpi:"DƯỚI mục tiêu", ls:"Còn cao, sắp giảm", cs:"Chuẩn bị nới lỏng"},
+    "Phục hồi":  {gdp:"Tăng từ đáy (dưới/đạt)", cpi:"DƯỚI mục tiêu", ls:"Đã giảm", cs:"Đang nới lỏng"},
+    "Tăng nóng": {gdp:"VƯỢT mục tiêu", cpi:"Bắt đầu vượt", ls:"Vẫn thấp, chưa tăng", cs:"Vẫn nới lỏng"},
+    "Đình lạm":  {gdp:"Bắt đầu giảm", cpi:"VƯỢT cao", ls:"Tăng cao", cs:"Thu hẹp"}
+  };
+  var PKEYS = ["gdp","cpi","ls","cs"];
+
+  var TIERS = [
+    {test:function(s){ return s.top === 4; }, tag:"4/4 · CHẮC CHẮN",
+     txt:"Cả bốn signal cùng chỉ một hướng. Giai đoạn rõ, điều chỉnh danh mục ở cường độ đầy đủ."},
+    {test:function(s){ return s.top === 3; }, tag:"3/4 · ƯU THẾ",
+     txt:"Ba signal khớp, một signal lệch. Giai đoạn chiếm ưu thế nhưng đã chớm chuyển tiếp — signal lệch chính là hướng đang đi. Điều chỉnh pha 70-30."},
+    {test:function(s){ return s.top === 2 && s.ties >= 2; }, tag:"2/2 · MIXED",
+     txt:"Hai giai đoạn cùng điểm. Bức tranh lưỡng lự — kim co về tâm đồng hồ. Chỉ điều chỉnh tối thiểu, chờ thêm data."},
+    {test:function(s){ return s.top <= 1; }, tag:"≤1/4 · SỐC",
+     txt:"Không giai đoạn nào khớp. Nhiều khả năng là sốc ngoại sinh. Khung chu kỳ tạm thời không dùng được — đừng adjust theo nó."}
+  ];
+
+  var $ = function(i){ return document.getElementById(i); };
+
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+
+  function computeScore(s){
+    var sc = {};
+    ORDER.forEach(function(p){ sc[p] = 0; });
+    (s.signals||[]).forEach(function(g){
+      (g["khớp"]||[]).forEach(function(p){ if(sc[p] !== undefined) sc[p]++; });
+    });
+    return sc;
+  }
+  function centroid(sc){
+    var sx=0, sy=0, tot=0;
+    ORDER.forEach(function(p){
+      var w = Math.max(0, Number(sc[p])||0);
+      sx += w*PHASES[p].c[0]; sy += w*PHASES[p].c[1]; tot += w;
+    });
+    return tot ? [sx/tot, sy/tot] : [0,0];
+  }
+  function PX(g){ return 170 + Math.max(-1,Math.min(1,g))*150; }
+  function PY(i){ return 170 - Math.max(-1,Math.min(1,i))*150; }
+
+  // "MM/YYYY" → số tháng đã trôi qua tính tới hôm nay
+  function monthsOld(asOf){
+    var m = /^(\d{1,2})\/(\d{4})$/.exec(String(asOf||"").trim());
+    if(!m) return null;
+    var now = new Date();
+    return (now.getFullYear()*12 + now.getMonth()) -
+           (parseInt(m[2],10)*12 + (parseInt(m[1],10) - 1));
+  }
+
+  function render(cur, hist){
+    var phase = PHASES[cur["giai_đoạn"]] ? cur["giai_đoạn"] : "Không xác định";
+    var ph = PHASES[phase];
+    var score = computeScore(cur);
+
+    $("asOf").textContent = cur.as_of || "—";
+    $("phaseName").textContent = phase;
+    $("phaseName").style.color = ph.color;
+    $("sampleBanner").classList.toggle("mc-hide", !cur.is_sample);
+
+    var bits = [];
+    if(cur["vị_trí"] && cur["vị_trí"] !== "—") bits.push("giai đoạn " + cur["vị_trí"]);
+    if(cur["hướng_chuyển"] && cur["hướng_chuyển"] !== "—") bits.push("→ " + cur["hướng_chuyển"]);
+    var meta = [cur["độ_tin_cậy"], cur.posture ? "posture " + cur.posture : ""].filter(Boolean).join(" · ");
+    $("sub").innerHTML = esc(bits.join(" · ")) +
+      (bits.length && meta ? "<span> · </span>" : "") +
+      (meta ? "<span>" + esc(meta) + "</span>" : "");
+    $("summary").textContent = cur["tóm_tắt"] || "";
+
+    var fl = [];
+    if(cur["cờ_chính_sách_đi_ngược"] === "CÓ") fl.push("⚠ Chính sách đi ngược chu kỳ");
+    if(cur["cờ_sốc_ngoại_sinh"] === "CÓ") fl.push("⚠ Sốc ngoại sinh");
+    if(cur["cờ_view_chiến_lược_mâu_thuẫn"] === "CÓ") fl.push("⚠ View chiến lược mâu thuẫn");
+    $("flags").innerHTML = fl.map(function(t){
+      return '<span class="mc-flag">' + esc(t) + '</span>';
+    }).join("");
+
+    var maxScore = Math.max.apply(null, ORDER.map(function(p){ return score[p]; }));
+
+    var head = '<thead><tr><th>Signal</th>' + ORDER.map(function(p){
+      var pr = PROFILE[p];
+      var k = pr ? PKEYS.map(function(x){ return pr[x]; }).join(" · ") : "";
+      return '<th style="color:' + PHASES[p].color + '" title="Hồ sơ chính tắc — ' +
+             esc(p) + ': ' + esc(k) + '">' + esc(p) + '</th>';
+    }).join("") + '</tr></thead>';
+
+    var body = '<tbody>' + (cur.signals||[]).map(function(g){
+      var hits = g["khớp"] || [];
+      return '<tr><td>' +
+        '<div class="sig-n">' + esc(g.signal) + '</div>' +
+        '<div class="sig-r">' + esc(g.reference || "") + '</div>' +
+        '<div class="sig-v">' + esc(g["giá_trị"] || "—") +
+          (g["kết_luận"] ? ' → <b>' + esc(g["kết_luận"]) + '</b>' : '') + '</div></td>' +
+        ORDER.map(function(p){
+          var on = hits.indexOf(p) > -1;
+          var want = (PROFILE[p] && g.key) ? PROFILE[p][g.key] : "";
+          if(!on) return '<td><span class="no" title="' + esc(g.signal) +
+            ' không khớp hồ sơ ' + esc(p) + (want ? " (cần: " + esc(want) + ")" : "") + '">·</span></td>';
+          return '<td><span class="tick" style="color:' + PHASES[p].color + '" title="' +
+            esc(g.signal) + ' khớp hồ sơ ' + esc(p) + (want ? " (" + esc(want) + ")" : "") +
+            ' → +1 điểm">✓</span></td>';
+        }).join("") + '</tr>';
+    }).join("") + '</tbody>';
+
+    var foot = '<tfoot><tr><td>Điểm</td>' + ORDER.map(function(p){
+      var v = score[p], isWin = (v === maxScore && v > 0);
+      return '<td class="' + (isWin ? "win" : "") + '" style="color:' +
+             (isWin ? PHASES[p].color : "var(--ink-faint)") + '">' + v + '/4</td>';
+    }).join("") + '</tr></tfoot>';
+
+    $("matrix").innerHTML = head + body + foot;
+
+    $("profiles").innerHTML = ORDER.map(function(p){
+      var pr = PROFILE[p];
+      return '<div><b style="color:' + PHASES[p].color + '">' + esc(p) + '</b> — <span>GDP ' +
+        esc(pr.gdp) + ' · CPI ' + esc(pr.cpi) + ' · LS ' + esc(pr.ls) +
+        ' · Chính sách ' + esc(pr.cs) + '</span></div>';
+    }).join("");
+
+    var ties = ORDER.filter(function(p){ return score[p] === maxScore; }).length;
+    var ctx = {top:maxScore, ties:ties};
+    $("meaning").innerHTML = TIERS.map(function(t){
+      var active = t.test(ctx);
+      return '<div class="' + (active?"now":"") + '"><code>' + esc(t.tag) + '</code></div>' +
+             '<div class="' + (active?"now":"") + '">' + esc(t.txt) + '</div>';
+    }).join("");
+
+    var aux = cur["phụ_trợ"] || [];
+    $("auxWrap").classList.toggle("mc-hide", aux.length === 0);
+    $("aux").innerHTML = aux.map(function(a){
+      return '<div class="mc-chip"><div class="mc-chip-n">' + esc(a["tên"]) + '</div>' +
+             '<div class="mc-chip-v">' + esc(a["giá_trị"] || "—") + '</div></div>';
+    }).join("");
+
+    // dial + vệt lịch sử
+    var pos = centroid(score);
+    var trail = hist.slice(-6);
+    $("trail").setAttribute("points",
+      trail.map(function(h){ var p = centroid(computeScore(h)); return PX(p[0]) + "," + PY(p[1]); })
+           .concat([PX(pos[0]) + "," + PY(pos[1])]).join(" "));
+    $("trailDots").innerHTML = trail.map(function(h){
+      var p = centroid(computeScore(h));
+      return '<circle cx="' + PX(p[0]) + '" cy="' + PY(p[1]) + '" r="3" fill="#5E7085" opacity="0.6">' +
+             '<title>' + esc(h.as_of) + ' — ' + esc(h["giai_đoạn"]) + '</title></circle>';
+    }).join("");
+
+    var dx = PX(pos[0]) - 170, dy = PY(pos[1]) - 170;
+    var deg = Math.atan2(dy, dx) * 180 / Math.PI;
+    var len = Math.min(1, Math.sqrt(dx*dx + dy*dy) / 150);
+    $("hand").querySelector("line").setAttribute("stroke", ph.color);
+    $("pin").setAttribute("fill", ph.color);
+    requestAnimationFrame(function(){
+      $("hand").style.transform = "rotate(" + deg + "deg) scaleX(" + len + ")";
+    });
+    setTimeout(function(){
+      $("dot").setAttribute("cx", PX(pos[0]));
+      $("dot").setAttribute("cy", PY(pos[1]));
+      $("dot").setAttribute("stroke", ph.color);
+      $("dot").style.opacity = 1;
+      var nx = PHASES[cur["hướng_chuyển"]];
+      if(nx && cur["hướng_chuyển"] !== "—" && cur["hướng_chuyển"] !== phase){
+        $("nextLbl").setAttribute("x", PX(nx.c[0]*0.60));
+        $("nextLbl").setAttribute("y", PY(nx.c[1]*0.60));
+        $("nextLbl").textContent = "→ " + cur["hướng_chuyển"];
+        $("nextLbl").style.opacity = 1;
+      }
+    }, 900);
+
+    // cảnh báo dữ liệu cũ — tính từ as_of, không cần trường phụ
+    var old = monthsOld(cur.as_of);
+    if(!cur.is_sample && old !== null && old >= 2){
+      $("stale").textContent = "⚠ Số liệu trên đây là của kỳ " + cur.as_of + " — đã " + old +
+        " tháng chưa cập nhật. Vĩ mô có thể đã đổi; đừng ra quyết định dựa trên trang này cho tới khi có bản mới.";
+      $("stale").classList.remove("mc-hide");
+    }
+
+    $("stamp").textContent = "Kỳ " + (cur.as_of || "—") +
+      (cur["nguồn"] ? " · Nguồn: " + cur["nguồn"] : "") +
+      " · Cô Em Tài Chính";
+  }
+
+  $("toggleProfiles").onclick = function(){ $("profiles").classList.toggle("mc-hide"); };
+
+  function fail(msg){
+    $("skel").classList.add("mc-hide");
+    $("err").classList.remove("mc-hide");
+    $("err").textContent = "Không tải được dữ liệu: " + msg;
+  }
+
+  fetch(DATA_URL + "?t=" + Date.now(), {cache:"no-store"})
+    .then(function(r){
+      if(!r.ok) throw new Error("HTTP " + r.status + " — kiểm tra macro-state.json có nằm cùng thư mục không.");
+      return r.json();
+    })
+    .then(function(data){
+      var months = data.months || [];
+      if(!months.length) throw new Error("Mảng 'months' rỗng.");
+      var cur  = months[months.length - 1];
+      var hist = months.slice(0, -1);
+      $("skel").classList.add("mc-hide");
+      $("app").classList.remove("mc-hide");
+      render(cur, hist);
+    })
+    .catch(function(e){ fail(e.message); });
+})();
+</script>
+</body>
+</html>
